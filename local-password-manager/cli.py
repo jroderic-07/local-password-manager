@@ -1,13 +1,19 @@
 import click
 import logging
 
+import password_manager
+
 @click.group()
 def cli():
     pass
 
 @click.command()
-def create_file():
+@click.argument('path')
+def create_file(path):
     logging.info("Creating file.")
+
+    pm = password_manager.passwordManager(path)
+    pm.create_file()
 
     logging.info("Created file.")
 
