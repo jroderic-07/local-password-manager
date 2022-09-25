@@ -22,11 +22,12 @@ def create_file(path):
 @click.argument('website')
 @click.argument('username')
 @click.argument('password')
-def add_password(master_password, website, username, password):
+@click.argument('path')
+def add_password(master_password, website, username, password, path):
     logging.info("Adding password.")
 
     pm = password_manager.passwordManager()
-    pm.add_password(master_password, website, username, password)
+    pm.add_password(master_password, website, username, password, path)
 
     logging.info("Added password.")
 
