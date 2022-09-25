@@ -1,12 +1,19 @@
 import json
 import logging
 
-class passwordManager:
-    def __init__(self, path):
-        logging.basicConfig(level=logging.INFO)
-        
-        self.path = path
+import cryptographic_algorithms
 
-    def create_file(self):
-        with open('{}/passwords_file.json'.format(self.path), 'w') as f:
+class passwordManager:
+    def __init__(self):
+        logging.basicConfig(level=logging.INFO)
+
+    def create_file(self, path):
+        with open('{}/passwords_file.json'.format(path), 'w') as f:
             logging.info("File created.")
+
+    def add_password(self, master_password, website, username, password):
+        password_dict = {
+            "website": website,
+            "username": username,
+            "password": password
+        }
