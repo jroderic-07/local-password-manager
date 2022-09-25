@@ -20,14 +20,15 @@ def create_file(path):
 @click.command()
 @click.argument('master_password')
 @click.argument('website')
+@click.argument('url')
 @click.argument('username')
 @click.argument('password')
 @click.argument('path')
-def add_password(master_password, website, username, password, path):
+def add_password(master_password, website, url, username, password, path):
     logging.info("Adding password.")
 
     pm = password_manager.passwordManager()
-    pm.add_password(master_password, website, username, password, path)
+    pm.add_password(master_password, website, url, username, password, path)
 
     logging.info("Added password.")
 
@@ -38,9 +39,17 @@ def delete_password():
     logging.info("Deleted password.")
 
 @click.command()
-def load_password():
+@click.argument('website')
+@click.argument('master_password')
+@click.argument('path')
+def retrieve_passwords(website, master_password, path):
     logging.info("Loading password.")
     
+    pm = password_manager.passwordManager()
+    passwords = pm.retrieve_passwords(website, master_password, path)
+
+    click.echo(passwords)
+
     logging.info("Loaded password.")
 
 
@@ -49,7 +58,7 @@ logging.basicConfig(level=logging.INFO)
 cli.add_command(create_file)
 cli.add_command(add_password)
 cli.add_command(delete_password)
-cli.add_command(load_password)
+cli.add_command(retrieve_passwords)
 
 if __name__ == '__main__':
     cli()

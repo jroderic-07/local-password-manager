@@ -12,12 +12,12 @@ class passwordManager:
         with open('{}/passwords_file.json'.format(path), 'w') as f:
             logging.info("File created.")
 
-    def add_password(self, master_password, website, username, password, path):
+    def add_password(self, master_password, website, url, username, password, path):
         encrypted_password = cryptographic_algorithms.encrypt_password(master_password, password)
         encrypted_password_string = str(encrypted_password)
 
         password_dict = {
-            "website": website,
+            "website": url,
             "username": username,
             "password": encrypted_password_string
         }
@@ -25,9 +25,17 @@ class passwordManager:
         with open('{}/passwords_file.json'.format(path), 'r') as f:
             try:
                 json_data = json.load(f)
-                json_data.append({"test": password_dict})
+                json_data.update({website: password_dict})
                 with open('{}/passwords_file.json'.format(path), 'w') as outfile:
                     json.dump(json_data, outfile)
             except JSONDecodeError:
                 with open('{}/passwords_file.json'.format(path), 'w') as outfile:
-                    json.dump([{"test": password_dict}], outfile)
+                    json.dump({website: password_dict}, outfile)
+
+    def retrieve_passwords(self, website, master_password, path):
+        with open('{}/passwords_file.json'.format(path), 'r') as f:
+            json_data = json.load(f)
+
+        json_data[website]['password'] = cryptographic_algorithms.decrypt_password(master_password, json_data[website]['password'])
+
+        return json_data[website]
