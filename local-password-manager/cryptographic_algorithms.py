@@ -4,12 +4,15 @@ import base64
 def encrypt_password(master_password, password):
     master_password_encoded = base64.urlsafe_b64encode(bytes(master_password, encoding='utf8'))
     fernet = Fernet(master_password_encoded)
+    
+    encrypted_password = fernet.encrypt(password.encode())
 
-    password_encoded = base64.urlsafe_b64encode(bytes(password, encoding='utf8'))
+    return encrypted_password.decode()
 
-    encrypted_password = fernet.encrypt(password_encoded)
+def decrypt_password(master_password, password):
+    master_password_encoded = base64.urlsafe_b64encode(bytes(master_password, encoding='utf8'))
+    fernet = Fernet(master_password_encoded)
 
-    return encrypted_password
+    decrypted_password = fernet.decrypt(password.encode()).decode()
 
-def decrypt():
-    pass
+    return decrypted_password
